@@ -9,6 +9,16 @@
         <a href="{{ route("admin.projects.index") }}" class="btn btn-success my-3"><i class="fa-solid fa-rotate-left me-2"></i>Return to list</a>
         <h1>{{ empty($project->id) ? 'Create Project' : 'Edit Project' }}</h1>
 
+        @if($errors->any())
+        <div class="alert alert-danger">
+            <ul>
+                @foreach ($errors->all() as $error)
+                <li>{{ $error }}</li>
+                @endforeach
+            </ul>
+        </div>
+        @endif
+
         <form action="{{ empty($project->id) ? route("admin.projects.store") : route("admin.projects.update", $project) }}"
         class="row g-3" method="POST">
         @if(!empty($project->id))
@@ -18,14 +28,20 @@
         
         <div class="col-12">
             <label for="name_project" class="form-label">Name of the project</label>
-            <input type="text" class="form-control" id="name_project" name="name_project"
-            value="{{ $project["name_project"] }}">
+            <input type="text" @class([ 'form-control', 'is-invalid' => $errors->has('name_project') ]) id="name_project" name="name_project"
+            value="{{ old("name_project", $project["name_project"]) }}">
+            @error("name_project")
+            <div class="invalid-feedback">{{ $message }}</div>
+            @enderror
         </div>
 
         <div class="col-12">
             <label for="description" class="form-label">Description of the project</label>
-            <textarea type="text" class="form-control" id="description" name="description" rows="5">{{ $project["description"] }}
-            </textarea>
+            <textarea type="text" @class([ 'form-control', 'is-invalid' => $errors->has('description') ]) id="description" 
+                name="description" rows="5">{{ old("description", $project["description"]) }}</textarea>
+            @error("description")
+            <div class="invalid-feedback">{{ $message }}</div>
+            @enderror
         </div>
 
         <div class="col-12">
